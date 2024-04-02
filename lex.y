@@ -2,8 +2,10 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <math.h>
-    #include <string.h>
-     char* var;
+    #include "table_symbole.h"
+    #include "table_instruction.h"
+    numberType ty;
+     int yylex(void);
       void yyerror (char const *s) {
         fprintf (stderr, "ERROR : %s\n", s);
     }
@@ -12,13 +14,10 @@
 
 %union{
     char* str;
-    int number;
-    float reel;
+    numberType type;
 }
-
-%token<number>  tNUMBER 
-%token<reel> tREAL
-%token<str> tVAR
+%token <str> tID
+%token <type> Type
 %token  tDIV tMUL tADD tSUB  tAFFECT
 %token  tLBRACE tRBRACE tLPAR tRPAR
 %token  tINT tCHAR tVOID tERROR tFLOAT
@@ -27,30 +26,37 @@
 %token<number> tIF tWHILE tELSE
 %token  tCOMPEQ tCOMPL tCOMPG tCOMPLE tCOMPGE tCOMPNEQ
 
-%left tCOMMA 
-%right tAFFECT tADD tSUB tMUL tDIV 
-%left tCOMPEQ 
-%left tCOMPL tCOMPG tCOMPLE tCOMPGE
-
+%left tSUB tADD
+%left tMUL tDIV
+%left tAFFECT
+%left tCOMPEQ tCOMPL tCOMPG tCOMPLE tCOMPGE tCOMPNEQ
 
 
 %start Input 
 %%
 
-Input:      main
+Input:      Function|Function Input
             ;
 
-main:       tINT tMAIN tLPAR tRPAR contenu { printf("main\n"); }
+Function:       Type tID FunctionName  contenu { printf("main\n"); }
             |
             ;
+FunctionName: tLPAR tRPAR
+            |tLPAR tVOID tRPAR
+            |tLPAR Parametre tRPAR;
+Parametre : Type tID 
+            |Parametre tCOMMA Parametre;
+            
 
-Type:       tINT 
-            |tCHAR 
+Type:       tINT   {$$=INT;}
+            |tFLOAT {$$=FLOAT;}
+            |tCHAR {$$=CHAR;}
             ;
 
-contenu:       tLBRACE {
+contenu:    tLBRACE tRBRACE
+            |tLBRACE {augmenDepth();
                        printf("Entrez la nouvelle contenue");}
-                       excus tRBRACE
+            excus tRBRACE { diminuDepth();}
             ;
 
 excus:      excu excus
@@ -61,92 +67,107 @@ excu :      Aff
             |Print
             |Declaration
             |IfStatement
-            |While
+            |WhileStatement
+            |AppelFunction
+            |Return
             ;
 
-IfStatement:tIF{printf("if \n");} Condition tLBRACE  excus  tRBRACE Else {printf("end if\n");} 
+Aff:        tID tAFFECT E tSEMI 
+            {  
+                set_ini($1);
+                reset_index_temporaire();
+                addTemp=creation_valeur_temporaire();
+                add_instruction("AFC",addTemp,$3,0);
+                add_instruction("COP", getIndex($1),addTemp,0);
+                suprime_valeur_temporaire();
+              printf("Affectation %s \n",$1);
+            }
+            ;
+Print:      tPRINTF tLPAR E tRPAR tSEMI  ;
+
+Declaration:Type  {ty=$1} AffectationDuringDeclaration MultipleDeclaration tSEMI
+            | tCONST Type {ty=$2} AffectationDuringDeclaration MultipleDeclaration tSEMI
             ;
 
-Else:       tELSE{printf("else\n");} tLBRACE  excus             
-            tRBRACE 
-            |tELSE excu 
-            |
-            ;
-
-
-While:      tWHILE  Condition contenu
-            ;
-
-Condition:  tLPAR E tCOMPEQ E tRPAR
-            |tLPAR E tCOMPL E tRPAR
-            |tLPAR E tCOMPG E tRPAR 
-            |tLPAR E tCOMPLE E tRPAR 
-            |tLPAR E tCOMPGE E tRPAR 
-            |tLPAR E tCOMPNEQ E tRPAR 
-            |tLPAR E 
-            ;
-
-Declaration:Type tVAR 
-            {
-             printf("Declaration 1\n");
-            } AffectationDuringDeclaration MultipleDeclaration tSEMI
-            | tCONST tINT tVAR 
-            {
-             printf("Declaration 1 constant\n");
-            }AffectationDuringDeclaration MultipleDeclaration tSEMI
-            ;
-
-MultipleDeclaration: tCOMMA tVAR{
-                        printf("Multiple declaration\n");
-                    }AffectationDuringDeclaration MultipleDeclaration
+MultipleDeclaration: tCOMMA AffectationDuringDeclaration MultipleDeclaration
                     | 
                     ;
 
-AffectationDuringDeclaration: tAFFECT E 
-                            |
-                            ;
+AffectationDuringDeclaration: tID tAFFECT E {  
+                                ajoutTable($1,ty);
+                                reset_index_temporaire();
+                                int add1 = creation_valeur_temporaire(); 
+                                add_instruction("AFC",add1,$2,0); 
+                                add_instruction("COP",getIndex($1),add1,0);
+                                suprime_valeur_temporaire();}
+                    | tID {ajoutTable($1,ty);}
+                    ;
 
-Print:      tPRINTF tLPAR tVAR    {printf("printf %s\n", $3);
-                                } tRPAR tSEMI                        
+IfStatement:tIF Condition IfSequence
+            tLBRACE {augmenDepth();} 
+            excus {
+                instruT[indexASm+1].r1=get_index_tab();
+                } 
+            tRBRACE{diminuDepth();} 
+            |tIF Condition IfSequence excus {
+                int current =get_index_tab();
+                instruT[indexASm+1].r1=current;
+                add_instruction("JMF",indexASm+1,0,0);
+                }
+            tELSE tLBRACE  {augmenDepth();}  
+            excus {instruT[current+1].r1=get_index_tab();} 
+            tRBRACE {diminuDepth();}
+            ;
+
+IfSequence: %empty {int indexASm=get_index_tab();add_instruction("JMF",indexASm,0,0);}
+WhileStatement:tWHILE Condition contenu
+            ;
+
+Condition:  tLPAR E tCOMPEQ E tRPAR    {$$=add_condition("==",$2,$4);}
+            |tLPAR E tCOMPL E tRPAR    {$$=add_condition("<",$2,$4);}
+            |tLPAR E tCOMPG E tRPAR    {$$=add_condition(">",$2,$4);}
+            |tLPAR E tCOMPLE E tRPAR   {$$=add_condition("<=",$2,$4);}
+            |tLPAR E tCOMPGE E tRPAR   {$$=add_condition(">=",$2,$4);}
+            |tLPAR E tCOMPNEQ E tRPAR  {$$=add_condition("!=",$2,$4);}
+            |tLPAR E tRPAR {$$=$2;}
             ;
 
 
-Aff:        tVAR 
-            {
-                var=malloc(sizeof($1));
-                strcpy(var,$1);
-            } 
-            tAFFECT E tSEMI 
-            {
-                printf("Affectation %s \n",var);
-                 
-                
-            }
-            ;
+
+
 
 E:          tREAL       {
-                        printf("float %f\n",$1);
+                        reset_index_temporaire();
+                        add_instruction("COP",creation_valeur_temporaire(),$1)
+                        suprime_valeur_temporaire();
                         }
                         
             |tNUMBER    {
-                        printf("int %d\n",$1);
+                        reset_index_temporaire();
+                        add_instruction("COP",creation_valeur_temporaire(),$1)
+                        suprime_valeur_temporaire();
                         }
                         
             |tVAR       {
-                        printf("tVAR= %s\n",$1);
+                       reset_index_temporaire();
+                        add_instruction("COP",creation_valeur_temporaire(),$1)
+                        suprime_valeur_temporaire();
                         }
                         
-            |E tADD E 
-           
-            |E tSUB E 
-            
-            |E tMUL E
-
-            |E tDIV E ;
+            |E tADD E  {$$=excu_op ("ADD",$1,$3);}
+            | tLPAR E tADD E tRPAR {$$=excu_op ("ADD",$1,$3);}
+            |E tSUB E {$$=excu_op ("SUB",$1,$3);}
+            | tLPAR E tSUB E tRPAR {$$=excu_op ("SUB",$1,$3);}
+            |E tMUL E {$$=excu_op ("MUL",$1,$3);}
+            | tLPAR E tMUL E tRPAR {$$=excu_op ("MUL",$1,$3);}
+            |E tDIV E {$$=excu_op ("DIV",$1,$3);}
+            | tLPAR E tDIV E tRPAR {$$=excu_op ("DIV",$1,$3);};
            
 %%
 int main(void){    
     //yydebug = 1;
+    ini_table();
+    ini_table_instruction();
     yyparse();
     return 0;
 }
