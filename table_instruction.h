@@ -18,7 +18,7 @@
 #define PRI 0xC
 
 typedef struct instruction {
-    char operation[3];
+    char * operation;
     int r0;
     int r1;
     int r2;
@@ -26,9 +26,11 @@ typedef struct instruction {
 
 void add_instruction(char * op, int r0,int r1,int r2);
 void ini_table_instruction();
-void get_index_current();
-void get_index_tab();
-void add_condition(char * condition);
-void excu_op (char* op);
+void setInstruTR1(int index,int var);
+int get_index_current();
+int get_index_tab();
+int add_condition(char * condition,int r1,int r2);
+int excu_op (char* op,int r1, int r2);
+void exportASMTable();
 
 #endif

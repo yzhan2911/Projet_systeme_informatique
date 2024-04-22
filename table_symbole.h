@@ -35,6 +35,11 @@ void supprimElement(char* name);
 int getIndex(char* name);
 int popValTemp();
 int pushValTemp();
+void handleError(const char *message);
 int get_last_index();
-numberType findtype(char *name);
+int creation_valeur_temporaire();
+int reset_index_temporaire();
+void suprime_valeur_temporaire();
+void set_ini(char* name);
+/*numberType findtype(char *name);*/
 #endif

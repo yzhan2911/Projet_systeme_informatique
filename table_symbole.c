@@ -39,11 +39,11 @@ void ajoutTable(char *name,numberType type){
     }
 
 }
-numberType findtype(char *name){
+/*numberType findtype(char *name){
     numberType ty;
     ty=symboleT[getIndex(name)-1].number;
     return ty;
-}
+}*/
 int getIndex(char* name){
     for(int i=0;i<Index;i++){
         if(strcmp(symboleT[i].name,name)==0){

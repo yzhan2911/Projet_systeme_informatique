@@ -1,4 +1,5 @@
 #include "table_instruction.h"
+#include "table_symbole.h"
 #define MAX_TABLE_SIZE 2000
 static instruction* instruT;
 static int index_instruction=0;
@@ -6,7 +7,9 @@ static int index_excu=0;
 void ini_table_instruction(){
     instruT =malloc(sizeof(instruction)*MAX_TABLE_SIZE);
 }
-
+void setInstruTR1(int index,int var){
+    instruT[index].r1=var;
+}
 void add_instruction(char * op, int r0,int r1,int r2){
 
     struct instruction newInstr = {
@@ -76,3 +79,12 @@ int excu_op (char* op,int r1, int r2){
      suprime_valeur_temporaire();
     return add; 
     }
+
+void exportASMTable(){
+    FILE* fp;
+    fp = fopen("asm", "a");
+    for (int i = 0; i < index_instruction; ++i) {
+        fprintf(fp,"%s %d %d %d\n", instruT[i].operation, instruT[i].r0, instruT[i].r1 , instruT[i].r2);
+    }
+    fclose(fp);
+}

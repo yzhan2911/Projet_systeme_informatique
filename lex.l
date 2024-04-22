@@ -51,9 +51,8 @@ ALPHANUM    {ALPHABET}({ALPHABET}|{NUMBER}|"_")*?
              return (tNUMBER);}
 {REAL}      {yylval.reel=atof(yytext);
              return (tREAL);} 
-{ALPHANUM}  {yylval.str=yytext;
+{ALPHANUM}  {yylval.str=strdup(yytext);
              return (tID);}
-
 
 .           {return (tERROR);}
 
