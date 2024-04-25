@@ -31,7 +31,7 @@ int get_index_current(){
 }
 
 int add_condition(char* op,int r1, int r2){
-    reset_index_temporaire();
+  
     int add1=creation_valeur_temporaire();
     int add2=creation_valeur_temporaire();
     add_instruction("AFC",add1,r1,0);
@@ -73,11 +73,10 @@ int add_condition(char* op,int r1, int r2){
         return add1;
     }
 int excu_op (char* op,int r1, int r2){
-     reset_index_temporaire();
-     int add = creation_valeur_temporaire();
-     add_instruction(op,add,r1,r2); 
+    
+     add_instruction(op,r1,r1,r2);
      suprime_valeur_temporaire();
-    return add; 
+    return r1; 
     }
 
 void exportASMTable(){

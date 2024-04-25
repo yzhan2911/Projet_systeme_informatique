@@ -18,7 +18,7 @@
     int number;
     float reel;
 }
-%token <str> tID tVAR
+%token <str> tID 
 %token <number> tNUMBER
 %token <reel> tREAL 
 %token <type>  tINT tCHAR tFLOAT 
@@ -63,9 +63,8 @@ Type:       tINT   {$$=(numberType)INT;}
             ;
 
 contenu:    tLBRACE tRBRACE
-            |tLBRACE {augmenDepth();
-                       printf("Entrez la nouvelle contenue");}
-            excus tRBRACE { diminuDepth();}
+            |tLBRACE { printf("Entrez la nouvelle contenue");}
+            excus tRBRACE 
             ;
 
 excus:      excu excus
@@ -79,13 +78,13 @@ excu :      Aff
             |WhileStatement
             ;
 Aff:        tID tAFFECT E tSEMI 
-            {  
+           {
                 set_ini($1);
-                reset_index_temporaire();
-                int addTemp=creation_valeur_temporaire();
-                add_instruction("AFC",addTemp,$3,0);
-                add_instruction("COP", getIndex($1),addTemp,0);
+                printf("element est: %s  ",$1);
+                add_instruction("COP", getIndex($1),$3,0);
+                  
                 suprime_valeur_temporaire();
+        
               printf("Affectation %s \n",$1);
             }
             ;
@@ -99,36 +98,37 @@ MultipleDeclaration: tCOMMA AffectationDuringDeclaration MultipleDeclaration
                     | %empty 
                     ;
 
-AffectationDuringDeclaration: tID tAFFECT E {  
-                                ajoutTable($1,ty);
+AffectationDuringDeclaration: tID {ajoutTable($1,ty,0);
                                 set_ini($1);
-                                reset_index_temporaire();
-                                int add1 = creation_valeur_temporaire(); 
-                                add_instruction("AFC",add1,$3,0); 
-                                add_instruction("COP",getIndex($1),add1,0);
-                                suprime_valeur_temporaire();}
-                    | tID {ajoutTable($1,ty);}
+                                $<str>1=$1}
+                            tAFFECT E {  
+                                int in= getIndex($<str>1);
+                                printf("element est: %s  et index :%d",$1,in);
+                                add_instruction("COP",in,$2,0);
+                                suprime_valeur_temporaire();
+                                }
+                    | tID {ajoutTable($1,ty,0);}
                     ;
 IfSequence: %empty {int indexASm=get_index_tab();
                     add_instruction("JMF",indexASm,0,0);
                     $$=indexASm;};
 IfStatement:tIF Condition IfSequence
-            tLBRACE {augmenDepth();} 
+            tLBRACE 
             excus {
                 setInstruTR1($3+1,get_index_tab());
                 } 
-            tRBRACE{diminuDepth();} 
+            tRBRACE
             |tIF Condition IfSequence excus {
                 int current =get_index_tab();
                 setInstruTR1($3+1,current);
                 add_instruction("JMF",$3+1,0,0);
                 $<number>1 = current;
                 }
-            tELSE tLBRACE  {augmenDepth();}  
+            tELSE tLBRACE    
             excus {
                 int current = $<number>1;
                 setInstruTR1(current+1,get_index_tab());} 
-            tRBRACE {diminuDepth();}
+            tRBRACE 
             ;
 
 
@@ -146,30 +146,24 @@ Condition:  tLPAR E tCOMPEQ E tRPAR    {$$=add_condition("==",$2,$4);}
 
 
 
-//problem de temporaire, refaire chaque fois quand il ajoute, il créer un valeur temporaire, et le suprimer apres utiliser.
 
 E:          
-            tID     {$$=$1;}
+            tID     {
+                    printf("element est: %s  ",$1);
+                    int indexE=getIndex($1);
+                    int add=creation_valeur_temporaire();
+                    add_instruction("COP",add,indexE,0);
+                    $$=add;} 
             |tREAL       {
-                        $$=get_last_index();
-                        reset_index_temporaire();
-                        add_instruction("COP",creation_valeur_temporaire(),$1,0);
-                        suprime_valeur_temporaire();
+                        int add=creation_valeur_temporaire();
+                         add_instruction("AFC",add,$1,0);
+                        $$=add;
                         }
                         
             |tNUMBER    {
-                        $$=get_last_index();
-                        reset_index_temporaire();
-                        add_instruction("COP",creation_valeur_temporaire(),$1,0);
-                        suprime_valeur_temporaire();
-                        }
-                        
-            |tVAR       {
-                        int a=get_last_index();
-                        $$=a;
-                        reset_index_temporaire();
-                        add_instruction("COP",creation_valeur_temporaire(),a,0);
-                        suprime_valeur_temporaire();
+                       int add=creation_valeur_temporaire();
+                         add_instruction("AFC",add,$1,0);
+                        $$=add;
                         }
             |E tADD E  {$$=excu_op ("ADD",$1,$3);}
             | tLPAR E tADD E tRPAR {$$=excu_op ("ADD",$2,$4);}
@@ -182,10 +176,11 @@ E:
            
 %%
 int main(void){    
-    yydebug = 1;
+    //yydebug = 1;
     ini_table();
     ini_table_instruction();
     yyparse();
     exportASMTable();
+    exportTableSymbole();
     return 0;
 }

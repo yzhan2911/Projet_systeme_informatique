@@ -17,16 +17,14 @@ typedef struct{
 char name[NAME_MAX_LENGTH];
 numberType number;
 bool ini;
-int depth;
+int valeur;
 } Symbole;
-void augmenDepth();
-void diminuDepth();
 
 /*initialiser le table de symbole*/
 void ini_table();
 
 /*ajouter un element dans le tableau*/
-void ajoutTable(char *name,numberType type);
+void ajoutTable(char *name,numberType type,int valeur);
 
 /*supprimer un element*/
 void supprimElement(char* name);
@@ -38,7 +36,6 @@ int pushValTemp();
 void handleError(const char *message);
 int get_last_index();
 int creation_valeur_temporaire();
-int reset_index_temporaire();
 void suprime_valeur_temporaire();
 void set_ini(char* name);
 /*numberType findtype(char *name);*/
