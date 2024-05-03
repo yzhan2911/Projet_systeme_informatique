@@ -1,0 +1,4 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/ALU.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'ALU'
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sim_1/new/test_ALU.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'test_ALU'
