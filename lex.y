@@ -98,13 +98,12 @@ MultipleDeclaration: tCOMMA AffectationDuringDeclaration MultipleDeclaration
                     | %empty 
                     ;
 
-AffectationDuringDeclaration: tID {ajoutTable($1,ty,0);
-                                set_ini($1);
-                                $<str>1=$1}
-                            tAFFECT E {  
-                                int in= getIndex($<str>1);
+AffectationDuringDeclaration: tID 
+                            tAFFECT {ajoutTable($1,ty,0);
+                                set_ini($1);} E {  
+                                int in= getIndex($1);
                                 printf("element est: %s  et index :%d",$1,in);
-                                add_instruction("COP",in,$2,0);
+                                add_instruction("COP",in,$4,0);
                                 suprime_valeur_temporaire();
                                 }
                     | tID {ajoutTable($1,ty,0);}
