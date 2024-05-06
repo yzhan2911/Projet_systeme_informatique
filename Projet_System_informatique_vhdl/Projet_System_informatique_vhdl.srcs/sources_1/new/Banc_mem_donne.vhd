@@ -51,8 +51,7 @@ begin
         if RST = '1' then              -- Reset
             Memoire <= (others => x"00"); 
         elsif RW = '0' then          --écriture
-                Memoire(to_integer(unsigned(add))) <= Data_in;
-            end if;
+                Memoire(to_integer(unsigned(add))) <= dataIn;
         end if;
     end process;
     dataOUT <= Memoire(to_integer(unsigned(add))); --reading 

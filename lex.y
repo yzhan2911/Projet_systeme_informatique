@@ -25,7 +25,6 @@
 %type <type> Type
 %type <number> E
 %type <number> Condition
-%type <number> IfSequence
 %token  tDIV tMUL tADD tSUB  tAFFECT
 %token  tLBRACE tRBRACE tLPAR tRPAR
 %token  tVOID tERROR 
@@ -108,19 +107,18 @@ AffectationDuringDeclaration: tID
                                 }
                     | tID {ajoutTable($1,ty,0);}
                     ;
-IfSequence: %empty {int indexASm=get_index_tab();
-                    add_instruction("JMF",indexASm,0,0);
-                    $$=indexASm;};
-IfStatement:tIF Condition IfSequence
+IfStatement:tIF Condition {add_instruction("JMF",$2,0,0);
+                            $<number>2 = get_index_tab()-1;}
             tLBRACE 
             excus {
-                setInstruTR1($3+1,get_index_tab());
+                setInstruTR1($<number>2,get_index_tab());
                 } 
             tRBRACE
-            |tIF Condition IfSequence excus {
+            |tIF Condition {add_instruction("JMF",$2,0,0);
+                            $<number>2 = get_index_tab()-1;} excus {
                 int current =get_index_tab();
-                setInstruTR1($3+1,current);
-                add_instruction("JMF",$3+1,0,0);
+                setInstruTR1($<number>2,current);
+                add_instruction("JMF",0,0,0);
                 $<number>1 = current;
                 }
             tELSE tLBRACE    

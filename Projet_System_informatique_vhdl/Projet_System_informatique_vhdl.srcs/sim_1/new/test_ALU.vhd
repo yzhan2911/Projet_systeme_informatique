@@ -51,7 +51,7 @@ architecture Behavioral of test_ALU is
     signal S : STD_LOGIC_VECTOR (7 downto 0);
     signal N, O, Z, C : STD_LOGIC;
 begin
-    uut: ALU 
+    uut: entity work.ALU 
     port map(
     A => A,
     B => B,

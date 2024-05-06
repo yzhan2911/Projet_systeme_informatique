@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 05/03/2024 11:44:12 AM
 -- Design Name: 
--- Module Name: banc_mem_instru - Behavioral
+-- Module Name: Banc_mem_instru - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -32,19 +32,21 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity banc_mem_instru is
+entity Banc_mem_instru is
     Port ( add : in STD_LOGIC_VECTOR (7 downto 0);
            CLK : in STD_LOGIC;
            dataOUT : out STD_LOGIC_VECTOR (31 downto 0));
-end banc_mem_instru;
+end Banc_mem_instru;
 
-architecture Behavioral of banc_mem_instru is
+architecture Behavioral of Banc_mem_instru is
     type ROM_Array is array (0 to 255) of STD_LOGIC_VECTOR(31 downto 0);
-    signal ROM : ROM_Array := (others => x"00000000");
+     signal ROM : ROM_Array := ((x"00000001"),(x"00000002"),(x"00000003"),others=>(x"00000004"));
+  
 
 begin
  process
     begin
+ 
         wait until clk'event and clk = '1';    
         dataOUT <= ROM(to_integer(unsigned(add))); 
        

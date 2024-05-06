@@ -1,6 +1,6 @@
 AFC 1 0 0
 COP 0 1 0
 COP 1 0 0
-JMF 3 0 0
+JMF 1 6 0
 AFC 2 6 0
 COP 0 2 0

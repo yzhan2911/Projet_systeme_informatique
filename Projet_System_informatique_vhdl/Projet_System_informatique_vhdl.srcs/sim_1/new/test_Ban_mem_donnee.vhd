@@ -6,25 +6,11 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity Banc_mem_donne_tb is
--- Testbench has no ports
-end Banc_mem_donne_tb;
+entity test_Ban_mem_donnee is
+end test_Ban_mem_donnee;
 
-architecture test of test_Banc_mem_donne is
+architecture Behavioral of test_Ban_mem_donnee is
 
-    -- Component Declaration for the Unit Under Test (UUT)
-    component Banc_mem_donne
-        Port (
-            add : in STD_LOGIC_VECTOR(7 downto 0);
-            dataIN : in STD_LOGIC_VECTOR(7 downto 0);
-            RW : in STD_LOGIC;
-            RST : in STD_LOGIC;
-            CLK : in STD_LOGIC;
-            dataOUT : out STD_LOGIC_VECTOR(7 downto 0)
-        );
-    end component;
-
-  
     signal add : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
     signal dataIN : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
     signal RW : STD_LOGIC := '0';
@@ -34,7 +20,7 @@ architecture test of test_Banc_mem_donne is
 
     
     begin
-        uut: component Banc_mem_donne
+        uut:  entity work.Banc_mem_donne
             port map (
                 add => add,
                 dataIN => dataIN,
@@ -57,9 +43,8 @@ architecture test of test_Banc_mem_donne is
     test_proc : process
     begin
         -- Reset
-        RST <= '1';
-        wait for 20 ns;
         RST <= '0';
+       
 
         -- Write to memory
         add <= "00000001";
@@ -70,13 +55,18 @@ architecture test of test_Banc_mem_donne is
         -- reading mode
         RW <= '1';  
         wait for 20 ns;
+        
 
         -- Check the output
         assert dataOUT = x"AA"
         report "read data incorrect!" severity error;
 
-       
+        wait for 20 ns;
+        RST <= '1';
+        assert dataOUT = x"00"
+        report "reset incorrect!" severity error;
+        
         wait;
     end process;
 
-end test;
+end Behavioral;

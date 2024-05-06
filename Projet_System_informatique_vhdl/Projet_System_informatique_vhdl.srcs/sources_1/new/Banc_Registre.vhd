@@ -21,10 +21,10 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -44,8 +44,27 @@ entity Banc_Registre is
 end Banc_Registre;
 
 architecture Behavioral of Banc_Registre is
-
+    type ArrayType is array(0 to 15) of std_logic_vector(7 downto 0); 
+    signal tab_registre:ArrayType :=(others=>x"00");
 begin
-
-
+     process 
+     begin
+        wait until CLK'event and CLK = '1';
+        
+        if RST = '1' then  
+           tab_registre<=(others=>x"00");
+        elsif W = '1' then 
+           tab_registre(to_integer(unsigned(add_W)))<=DATA; 
+        end if;
+        if W='1'and add_A=add_W then
+            QA<=DATA;
+        elsif W='1' and add_B=add_W then
+            QB<=DATA;
+        else
+            QA<= tab_registre(TO_INTEGER(unsigned(add_A)));
+            QB<= tab_registre(TO_INTEGER(unsigned(add_B)));
+        end if;
+        
+     end process;
+                
 end Behavioral;

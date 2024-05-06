@@ -3,12 +3,12 @@
 # SW Build 3865809 on Sun May  7 15:04:56 MDT 2023
 # IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
 # SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
-# Start of session at: Fri May  3 11:30:32 2024
-# Process ID: 37240
+# Start of session at: Mon May  6 08:46:21 2024
+# Process ID: 9108
 # Current directory: /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.runs/synth_1
-# Command line: vivado -log ALU.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ALU.tcl
-# Log file: /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.runs/synth_1/ALU.vds
+# Command line: vivado -log Banc_Registre.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Banc_Registre.tcl
+# Log file: /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.runs/synth_1/Banc_Registre.vds
 # Journal file: /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.runs/synth_1/vivado.jou
-# Running On: insa-20929, OS: Linux, CPU Frequency: 2994.904 MHz, CPU Physical cores: 6, Host memory: 16434 MB
+# Running On: insa-10581, OS: Linux, CPU Frequency: 1197.820 MHz, CPU Physical cores: 4, Host memory: 16677 MB
 #-----------------------------------------------------------
-source ALU.tcl -notrace
+source Banc_Registre.tcl -notrace
