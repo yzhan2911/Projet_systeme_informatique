@@ -25,3 +25,17 @@ source test_Ban_mem_instru.tcl
 close_sim
 launch_simulation
 source test_Ban_mem_instru.tcl
+close_sim
+close [ open /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/chemain_donnee.vhd w ]
+add_files /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/chemain_donnee.vhd
+close [ open /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_LI_DI.vhd w ]
+add_files /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_LI_DI.vhd
+close [ open /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_DI_EX.vhd w ]
+add_files /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_DI_EX.vhd
+close [ open /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_EX_Mem.vhd w ]
+add_files /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_EX_Mem.vhd
+close [ open /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_Mem_RE.vhd w ]
+add_files /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_Mem_RE.vhd
+add_files -norecurse /home/yzhang5/4IR/architecture/DM_ALU/DM_ALU.srcs/sources_1/new/compteur8bit.vhd
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+add_files -fileset sim_1 -norecurse /home/yzhang5/4IR/architecture/DM_ALU/DM_ALU.srcs/sim_1/new/testcompteur8bits.vhd
