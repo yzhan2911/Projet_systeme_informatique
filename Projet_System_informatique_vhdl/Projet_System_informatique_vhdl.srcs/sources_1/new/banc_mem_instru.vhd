@@ -21,10 +21,11 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -38,8 +39,16 @@ entity banc_mem_instru is
 end banc_mem_instru;
 
 architecture Behavioral of banc_mem_instru is
+    type ROM_Array is array (0 to 255) of STD_LOGIC_VECTOR(31 downto 0);
+    signal ROM : ROM_Array := (others => x"00000000");
 
 begin
-
-
+ process
+    begin
+        wait until clk'event and clk = '1';    
+        dataOUT <= ROM(to_integer(unsigned(add))); 
+       
+    end process;
+    
 end Behavioral;
+
