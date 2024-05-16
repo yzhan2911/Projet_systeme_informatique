@@ -70,6 +70,10 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
+set_param checkpoint.writeSynthRtdsInDcp 1
+set_param synth.incrementalSynthesisCache ./.Xil/Vivado-2698-insa-20929/incrSyn
+set_msg_config -id {Synth 8-256} -limit 10000
+set_msg_config -id {Synth 8-638} -limit 10000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a35tcpg236-1
 
@@ -86,7 +90,18 @@ set_property ip_output_repo /home/yzhang5/4IR/projet_systeme_informatique/Projet
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_vhdl -library xil_defaultlib /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/Banc_Registre.vhd
+read_vhdl -library xil_defaultlib {
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/Banc_Registre.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/Banc_mem_instru.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/ALU.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/Banc_mem_donne.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/chemain_donnee.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_LI_DI.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_DI_EX.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_EX_Mem.vhd
+  /home/yzhang5/4IR/projet_systeme_informatique/Projet_systeme_informatique/Projet_System_informatique_vhdl/Projet_System_informatique_vhdl.srcs/sources_1/new/component_Mem_RE.vhd
+  /home/yzhang5/4IR/architecture/DM_ALU/DM_ALU.srcs/sources_1/new/compteur8bit.vhd
+}
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the

@@ -32,12 +32,21 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity component_LI_DI is
---  Port ( );
+ Port ( 
+ InA, InB, InC,InOp : in std_logic_vector (7 downto 0);
+ OutA, OutB, OutC,OutOp : out std_logic_vector (7 downto 0);
+ Clk : in std_logic);
 end component_LI_DI;
 
 architecture Behavioral of component_LI_DI is
 
 begin
-
-
+    process 
+    begin 
+        wait until Clk'event and Clk='1';
+        OutA<=InA;
+        OutB<=InB;
+        OutC<=InC;
+        OutOp<=InOp;
+    end process;
 end Behavioral;

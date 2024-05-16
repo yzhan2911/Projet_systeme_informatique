@@ -30,14 +30,21 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- any Xilinx leaf cells in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
-
 entity component_Mem_RE is
---  Port ( );
+ Port ( 
+ InA, InB,InOp : in std_logic_vector (7 downto 0);
+ OutA, OutB, OutOp : out std_logic_vector (7 downto 0);
+ Clk : in std_logic);
 end component_Mem_RE;
 
 architecture Behavioral of component_Mem_RE is
 
 begin
-
-
+    process 
+    begin 
+        wait until Clk'event and Clk='1';
+        OutA<=InA;
+        OutB<=InB;
+        OutOp<=InOp;
+    end process;
 end Behavioral;

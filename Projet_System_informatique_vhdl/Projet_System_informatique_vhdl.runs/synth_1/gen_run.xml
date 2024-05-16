@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1714977978" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/ALU.dcp">
+<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1715845141" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/ALU.dcp">
+  <File Type="VDS-TIMINGSUMMARY" Name="Banc_Registre_timing_summary_synth.rpt"/>
   <File Type="RDS-DCP" Name="Banc_Registre.dcp"/>
   <File Type="RDS-UTIL-PB" Name="Banc_Registre_utilization_synth.pb"/>
-  <File Type="PA-TCL" Name="Banc_Registre.tcl"/>
   <File Type="RDS-UTIL" Name="Banc_Registre_utilization_synth.rpt"/>
-  <File Type="REPORTS-TCL" Name="Banc_Registre_reports.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="Banc_Registre_drc_synth.rpt"/>
   <File Type="RDS-RDS" Name="Banc_Registre.vds"/>
+  <File Type="REPORTS-TCL" Name="Banc_Registre_reports.tcl"/>
+  <File Type="VDS-TIMING-PB" Name="Banc_Registre_timing_summary_synth.pb"/>
+  <File Type="PA-TCL" Name="Banc_Registre.tcl"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/Banc_Registre.vhd">
@@ -14,23 +17,56 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PSRCDIR/sources_1/new/ALU.vhd">
+    <File Path="$PSRCDIR/sources_1/new/Banc_mem_instru.vhd">
       <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PSRCDIR/sources_1/new/banc_mem_instru.vhd">
+    <File Path="$PSRCDIR/sources_1/new/ALU.vhd">
       <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
     <File Path="$PSRCDIR/sources_1/new/Banc_mem_donne.vhd">
       <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/chemain_donnee.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/component_LI_DI.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/component_DI_EX.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/component_EX_Mem.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/component_Mem_RE.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../../../architecture/DM_ALU/DM_ALU.srcs/sources_1/new/compteur8bit.vhd">
+      <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
