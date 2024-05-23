@@ -26,7 +26,7 @@ typedef struct instruction {
 
 void add_instruction(char * op, int r0,int r1,int r2);
 void ini_table_instruction();
-void setInstruTR1(int index,int var);
+void setInstruTR1(int index,int var,int registre);
 int get_index_current();
 int get_index_tab();
 int add_condition(char * condition,int r1,int r2);

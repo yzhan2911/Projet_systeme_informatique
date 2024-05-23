@@ -30,7 +30,7 @@
 %token  tVOID tERROR 
 %token  tSEMI tCOMMA
 %token  tMAIN tRETURN tCONST tPRINTF
-%token<number> tIF tWHILE tELSE
+%token<number> tIF tWHILE tELSE 
 %token  tCOMPEQ tCOMPL tCOMPG tCOMPLE tCOMPGE tCOMPNEQ
 
 %left tSUB tADD
@@ -105,31 +105,43 @@ AffectationDuringDeclaration: tID
                                 add_instruction("COP",in,$4,0);
                                 suprime_valeur_temporaire();
                                 }
-                    | tID {ajoutTable($1,ty,0);}
+                    | tID {ajoutTable($1,ty,0); }
                     ;
-IfStatement:tIF Condition {add_instruction("JMF",$2,0,0);
-                            $<number>2 = get_index_tab()-1;}
-            tLBRACE 
-            excus {
-                setInstruTR1($<number>2,get_index_tab());
+IfStatement:tIF ifS1
+            tLBRACE
+            excus
+            tRBRACE tELSE tLBRACE   {
+                add_instruction("JMP",0,0,0);
+                  $<number>1 =get_index_tab();
                 } 
-            tRBRACE
-            |tIF Condition {add_instruction("JMF",$2,0,0);
-                            $<number>2 = get_index_tab()-1;} excus {
-                int current =get_index_tab();
-                setInstruTR1($<number>2,current);
-                add_instruction("JMF",0,0,0);
-                $<number>1 = current;
-                }
-            tELSE tLBRACE    
-            excus {
-                int current = $<number>1;
-                setInstruTR1(current+1,get_index_tab());} 
-            tRBRACE 
+            excus
+            tRBRACE  {
+                setInstruTR1($<number>2, $<number>1+1,1); 
+                setInstruTR1( $<number>1-1,get_index_tab(),0); 
+                 printf("index table est %d ",get_index_tab());} ;
+
+            |tIF ifS1
+            tLBRACE 
+            excus 
+            tRBRACE {setInstruTR1($<number>2,get_index_tab(),1);} 
             ;
+ifS1:Condition   {   suprime_valeur_temporaire();
+                            add_instruction("JMF",$1,0,0);
+                            $<number>$ = get_index_tab()-1;} ;
 
 
-WhileStatement:tWHILE Condition contenu
+
+
+WhileStatement:tWHILE {$<number>1=get_index_tab();}
+                Condition{ 
+                    suprime_valeur_temporaire();
+                    suprime_valeur_temporaire();
+                    $<number>2=get_index_tab();
+                    add_instruction("JMF",$3,0,0);
+                }contenu{
+                    add_instruction("JMP",$<number>1,0,0);
+                    setInstruTR1($<number>2,get_index_tab()+1,1);
+                }
             ;
 
 Condition:  tLPAR E tCOMPEQ E tRPAR    {$$=add_condition("==",$2,$4);}
@@ -150,7 +162,8 @@ E:
                     int indexE=getIndex($1);
                     int add=creation_valeur_temporaire();
                     add_instruction("COP",add,indexE,0);
-                    $$=add;} 
+                    $$=add;
+                   } 
             |tREAL       {
                         int add=creation_valeur_temporaire();
                          add_instruction("AFC",add,$1,0);

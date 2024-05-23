@@ -7,8 +7,14 @@ static int index_excu=0;
 void ini_table_instruction(){
     instruT =malloc(sizeof(instruction)*MAX_TABLE_SIZE);
 }
-void setInstruTR1(int index,int var){
-    instruT[index].r1=var;
+void setInstruTR1(int index,int var,int registre){
+    if(registre ==0) {
+        instruT[index].r0=var;
+    }else if(registre==1){ 
+        instruT[index].r1=var;
+    }else if(registre==2){
+        instruT[index].r2=var;
+    }
 }
 void add_instruction(char * op, int r0,int r1,int r2){
 
