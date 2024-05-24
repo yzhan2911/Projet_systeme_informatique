@@ -160,8 +160,9 @@ signal ALU_N,ALU_O,ALU_Z,ALU_C : std_logic;
 
 
 -- Memoir des données
-signal RW :STD_LOGIC ;
+signal LC_RW :STD_LOGIC ;
 signal dataOUT_mem_data :STD_LOGIC_VECTOR (7 downto 0):= (others=>'1');
+signal EX_Mem_avant_addr:STD_LOGIC_VECTOR (7 downto 0):= (others=>'1');
 
 begin
 IP : compteur8bit port map(
@@ -190,6 +191,17 @@ LI_DI:component_LI_DI port map(
   OutOp=>LI_DI_Op,
   Clk =>CLK);
 
+registre:  Banc_Registre Port map(
+          add_W =>Mem_RE_A(3 downto 0),
+          W=>banc_registre_w ,
+          DATA=>Mem_RE_B,
+          RST=>RST,
+          CLK=>CLK,
+          add_A=>LI_DI_B(3 downto 0),
+          add_B=>LI_DI_C(3 downto 0),
+          QA=>banc_registre_QA,
+          QB=>banc_registre_QB);
+
 DI_EX:component_DI_EX port map( 
   InA=>LI_DI_A,
   InB=>LI_DI_final_B,
@@ -201,37 +213,6 @@ DI_EX:component_DI_EX port map(
   OutOp=>DI_EX_Op, 
  Clk=>CLK);
 
-
-EX_Mem:component_EX_Mem port map( 
-  InA=>DI_EX_A,
-  InB=>DI_EX_final_B,
-  InOp=>DI_EX_Op, 
-  OutA=>EX_Mem_A,
-  OutB=>EX_Mem_B,
-  OutOp=>EX_Mem_Op, 
- Clk=>CLK);
- 
-Mem_RE:component_Mem_RE port map( 
-  InA=>EX_Mem_A,
-  InB=>EX_Mem_final_B,
-  InOp=>EX_Mem_Op, 
-  OutA=>Mem_RE_A,
-  OutB=>Mem_RE_B,
-  OutOp=>Mem_RE_Op, 
-  Clk=>CLK);
-
-registre:  Banc_Registre Port map(
-           add_W =>Mem_RE_A(3 downto 0),
-           W=>banc_registre_w ,
-           DATA=>Mem_RE_B,
-           RST=>RST,
-           CLK=>CLK,
-           add_A=>LI_DI_B(3 downto 0),
-           add_B=>LI_DI_C(3 downto 0),
-           QA=>banc_registre_QA,
-           QB=>banc_registre_QB);
-
-
 UAL :  ALU port map ( 
            A=>DI_EX_B, 
            B=>DI_EX_C,
@@ -242,13 +223,38 @@ UAL :  ALU port map (
            Z => ALU_Z,
            C => ALU_C);
 
+EX_Mem:component_EX_Mem port map( 
+  InA=>DI_EX_A,
+  InB=>DI_EX_final_B,
+  InOp=>DI_EX_Op, 
+  OutA=>EX_Mem_A,
+  OutB=>EX_Mem_B,
+  OutOp=>EX_Mem_Op, 
+ Clk=>CLK);
+ 
 Mem_data:  Banc_mem_donne port map (
-           add=>EX_Mem_B,
+           add=>EX_Mem_avant_addr,
            dataIN=>EX_Mem_B ,
-           RW =>RW,
+           RW =>LC_RW,
            RST =>RST,
            CLK =>CLK,
            dataOUT=>dataOUT_mem_data);
+
+Mem_RE:component_Mem_RE port map( 
+  InA=>EX_Mem_A,
+  InB=>EX_Mem_final_B,
+  InOp=>EX_Mem_Op, 
+  OutA=>Mem_RE_A,
+  OutB=>Mem_RE_B,
+  OutOp=>Mem_RE_Op, 
+  Clk=>CLK);
+
+
+
+
+
+
+
 
 -- ADD      0x01
 -- MUL      0x02
@@ -268,7 +274,7 @@ Ctrl_Alu <="000" when DI_EX_Op=x"05" or DI_EX_Op=x"06" or DI_EX_Op=x"07" or DI_E
         else DI_EX_Op(2 downto 0); -- + -* /
     
 -- LC pour memoir des donnees
-RW <= '0' when EX_Mem_Op =x"08" 
+LC_RW <= '0' when EX_Mem_Op =x"08" 
     else '1';
 
 -- mux apres banc de registre
@@ -282,5 +288,9 @@ DI_EX_final_B <= DI_EX_B when  DI_EX_Op = x"05" or DI_EX_Op = x"06" or DI_EX_Op 
 -- mux apres memoir des donnees
 EX_Mem_final_B <= dataOUT_mem_data when EX_Mem_Op =x"07" or EX_Mem_Op =x"08" --  load store
                 else EX_Mem_B;
+
+-- mux avant memoir des donnees
+EX_Mem_avant_addr <= EX_Mem_A when EX_Mem_Op =x"07" or EX_Mem_Op =x"08" --  load store
+                   else EX_Mem_B;
  
 end Behavioral;
