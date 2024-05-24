@@ -40,8 +40,8 @@ int add_condition(char* op,int r1, int r2){
   
     int add1=creation_valeur_temporaire();
     int add2=creation_valeur_temporaire();
-    add_instruction("AFC",add1,r1,0);
-    add_instruction("AFC",add2,r2,0);
+    add_instruction("COP",add1,r1,0);
+    add_instruction("COP",add2,r2,0);
         if(strcmp(op,"==")==0) {      
             add_instruction("EQU",add1 ,add1,add2); 
         }

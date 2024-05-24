@@ -81,7 +81,7 @@ Aff:        tID tAFFECT E tSEMI
                 set_ini($1);
                 printf("element est: %s  ",$1);
                 add_instruction("COP", getIndex($1),$3,0);
-                  
+                   
                 suprime_valeur_temporaire();
         
               printf("Affectation %s \n",$1);
@@ -103,6 +103,7 @@ AffectationDuringDeclaration: tID
                                 int in= getIndex($1);
                                 printf("element est: %s  et index :%d",$1,in);
                                 add_instruction("COP",in,$4,0);
+                               
                                 suprime_valeur_temporaire();
                                 }
                     | tID {ajoutTable($1,ty,0); }
@@ -113,11 +114,12 @@ IfStatement:tIF ifS1
             tRBRACE tELSE tLBRACE   {
                 add_instruction("JMP",0,0,0);
                   $<number>1 =get_index_tab();
+                 
                 } 
             excus
             tRBRACE  {
-                setInstruTR1($<number>2, $<number>1+1,1); 
-                setInstruTR1( $<number>1-1,get_index_tab(),0); 
+                setInstruTR1($<number>2, $<number>1,1); 
+                 setInstruTR1( $<number>1-1,get_index_tab(),0);
                  printf("index table est %d ",get_index_tab());} ;
 
             |tIF ifS1
@@ -132,7 +134,8 @@ ifS1:Condition   {   suprime_valeur_temporaire();
 
 
 
-WhileStatement:tWHILE {$<number>1=get_index_tab();}
+WhileStatement:tWHILE {$<number>1=get_index_tab();
+                    }
                 Condition{ 
                     suprime_valeur_temporaire();
                     suprime_valeur_temporaire();
@@ -140,7 +143,7 @@ WhileStatement:tWHILE {$<number>1=get_index_tab();}
                     add_instruction("JMF",$3,0,0);
                 }contenu{
                     add_instruction("JMP",$<number>1,0,0);
-                    setInstruTR1($<number>2,get_index_tab()+1,1);
+                    setInstruTR1($<number>2,get_index_tab(),1);
                 }
             ;
 

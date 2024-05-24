@@ -562,10 +562,10 @@ static const yytype_uint8 yyrline[] =
        0,    45,    45,    45,    48,    50,    50,    52,    53,    54,
       55,    56,    59,    60,    61,    64,    65,    65,    69,    70,
       73,    74,    75,    76,    77,    79,    90,    92,    92,    93,
-      93,    96,    97,   101,   100,   108,   113,   110,   123,   128,
-     135,   136,   135,   147,   148,   149,   150,   151,   152,   153,
-     160,   167,   173,   178,   179,   180,   181,   182,   183,   184,
-     185
+      93,    96,    97,   101,   100,   109,   114,   111,   125,   130,
+     137,   139,   137,   150,   151,   152,   153,   154,   155,   156,
+     163,   170,   176,   181,   182,   183,   184,   185,   186,   187,
+     188
 };
 #endif
 
@@ -1245,7 +1245,7 @@ yyreduce:
                 set_ini((yyvsp[-3].str));
                 printf("element est: %s  ",(yyvsp[-3].str));
                 add_instruction("COP", getIndex((yyvsp[-3].str)),(yyvsp[-1].number),0);
-                  
+                   
                 suprime_valeur_temporaire();
         
               printf("Affectation %s \n",(yyvsp[-3].str));
@@ -1278,119 +1278,122 @@ yyreduce:
                                 int in= getIndex((yyvsp[-3].str));
                                 printf("element est: %s  et index :%d",(yyvsp[-3].str),in);
                                 add_instruction("COP",in,(yyvsp[0].number),0);
+                               
                                 suprime_valeur_temporaire();
                                 }
-#line 1284 "lex.tab.c"
+#line 1285 "lex.tab.c"
     break;
 
   case 35: /* AffectationDuringDeclaration: tID  */
-#line 108 "lex.y"
+#line 109 "lex.y"
                           {ajoutTable((yyvsp[0].str),ty,0); }
-#line 1290 "lex.tab.c"
+#line 1291 "lex.tab.c"
     break;
 
   case 36: /* $@5: %empty  */
-#line 113 "lex.y"
+#line 114 "lex.y"
                                     {
                 add_instruction("JMP",0,0,0);
                   (yyvsp[-6].number) =get_index_tab();
+                 
                 }
-#line 1299 "lex.tab.c"
+#line 1301 "lex.tab.c"
     break;
 
   case 37: /* IfStatement: tIF ifS1 tLBRACE excus tRBRACE tELSE tLBRACE $@5 excus tRBRACE  */
-#line 118 "lex.y"
+#line 120 "lex.y"
                      {
-                setInstruTR1((yyvsp[-8].number), (yyvsp[-9].number)+1,1); 
-                setInstruTR1( (yyvsp[-9].number)-1,get_index_tab(),0); 
+                setInstruTR1((yyvsp[-8].number), (yyvsp[-9].number),1); 
+                 setInstruTR1( (yyvsp[-9].number)-1,get_index_tab(),0);
                  printf("index table est %d ",get_index_tab());}
-#line 1308 "lex.tab.c"
+#line 1310 "lex.tab.c"
     break;
 
   case 38: /* IfStatement: tIF ifS1 tLBRACE excus tRBRACE  */
-#line 126 "lex.y"
+#line 128 "lex.y"
                     {setInstruTR1((yyvsp[-3].number),get_index_tab(),1);}
-#line 1314 "lex.tab.c"
+#line 1316 "lex.tab.c"
     break;
 
   case 39: /* ifS1: Condition  */
-#line 128 "lex.y"
+#line 130 "lex.y"
                  {   suprime_valeur_temporaire();
                             add_instruction("JMF",(yyvsp[0].number),0,0);
                             (yyval.number) = get_index_tab()-1;}
-#line 1322 "lex.tab.c"
+#line 1324 "lex.tab.c"
     break;
 
   case 40: /* @6: %empty  */
-#line 135 "lex.y"
-                      {(yyvsp[0].number)=get_index_tab();}
-#line 1328 "lex.tab.c"
+#line 137 "lex.y"
+                      {(yyvsp[0].number)=get_index_tab();
+                    }
+#line 1331 "lex.tab.c"
     break;
 
   case 41: /* $@7: %empty  */
-#line 136 "lex.y"
+#line 139 "lex.y"
                          { 
                     suprime_valeur_temporaire();
                     suprime_valeur_temporaire();
                     (yyvsp[-1].number)=get_index_tab();
                     add_instruction("JMF",(yyvsp[0].number),0,0);
                 }
-#line 1339 "lex.tab.c"
+#line 1342 "lex.tab.c"
     break;
 
   case 42: /* WhileStatement: tWHILE @6 Condition $@7 contenu  */
-#line 141 "lex.y"
+#line 144 "lex.y"
                         {
                     add_instruction("JMP",(yyvsp[-4].number),0,0);
-                    setInstruTR1((yyvsp[-3].number),get_index_tab()+1,1);
+                    setInstruTR1((yyvsp[-3].number),get_index_tab(),1);
                 }
-#line 1348 "lex.tab.c"
+#line 1351 "lex.tab.c"
     break;
 
   case 43: /* Condition: tLPAR E tCOMPEQ E tRPAR  */
-#line 147 "lex.y"
+#line 150 "lex.y"
                                        {(yyval.number)=add_condition("==",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1354 "lex.tab.c"
+#line 1357 "lex.tab.c"
     break;
 
   case 44: /* Condition: tLPAR E tCOMPL E tRPAR  */
-#line 148 "lex.y"
+#line 151 "lex.y"
                                        {(yyval.number)=add_condition("<",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1360 "lex.tab.c"
+#line 1363 "lex.tab.c"
     break;
 
   case 45: /* Condition: tLPAR E tCOMPG E tRPAR  */
-#line 149 "lex.y"
+#line 152 "lex.y"
                                        {(yyval.number)=add_condition(">",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1366 "lex.tab.c"
+#line 1369 "lex.tab.c"
     break;
 
   case 46: /* Condition: tLPAR E tCOMPLE E tRPAR  */
-#line 150 "lex.y"
+#line 153 "lex.y"
                                        {(yyval.number)=add_condition("<=",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1372 "lex.tab.c"
+#line 1375 "lex.tab.c"
     break;
 
   case 47: /* Condition: tLPAR E tCOMPGE E tRPAR  */
-#line 151 "lex.y"
+#line 154 "lex.y"
                                        {(yyval.number)=add_condition(">=",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1378 "lex.tab.c"
+#line 1381 "lex.tab.c"
     break;
 
   case 48: /* Condition: tLPAR E tCOMPNEQ E tRPAR  */
-#line 152 "lex.y"
+#line 155 "lex.y"
                                        {(yyval.number)=add_condition("!=",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1384 "lex.tab.c"
+#line 1387 "lex.tab.c"
     break;
 
   case 49: /* Condition: tLPAR E tRPAR  */
-#line 153 "lex.y"
+#line 156 "lex.y"
                            {(yyval.number)=(yyvsp[-1].number);}
-#line 1390 "lex.tab.c"
+#line 1393 "lex.tab.c"
     break;
 
   case 50: /* E: tID  */
-#line 160 "lex.y"
+#line 163 "lex.y"
                     {
                     printf("element est: %s  ",(yyvsp[0].str));
                     int indexE=getIndex((yyvsp[0].str));
@@ -1398,79 +1401,79 @@ yyreduce:
                     add_instruction("COP",add,indexE,0);
                     (yyval.number)=add;
                    }
-#line 1402 "lex.tab.c"
+#line 1405 "lex.tab.c"
     break;
 
   case 51: /* E: tREAL  */
-#line 167 "lex.y"
+#line 170 "lex.y"
                          {
                         int add=creation_valeur_temporaire();
                          add_instruction("AFC",add,(yyvsp[0].reel),0);
                         (yyval.number)=add;
                         }
-#line 1412 "lex.tab.c"
+#line 1415 "lex.tab.c"
     break;
 
   case 52: /* E: tNUMBER  */
-#line 173 "lex.y"
+#line 176 "lex.y"
                         {
                        int add=creation_valeur_temporaire();
                          add_instruction("AFC",add,(yyvsp[0].number),0);
                         (yyval.number)=add;
                         }
-#line 1422 "lex.tab.c"
+#line 1425 "lex.tab.c"
     break;
 
   case 53: /* E: E tADD E  */
-#line 178 "lex.y"
+#line 181 "lex.y"
                        {(yyval.number)=excu_op ("ADD",(yyvsp[-2].number),(yyvsp[0].number));}
-#line 1428 "lex.tab.c"
+#line 1431 "lex.tab.c"
     break;
 
   case 54: /* E: tLPAR E tADD E tRPAR  */
-#line 179 "lex.y"
+#line 182 "lex.y"
                                    {(yyval.number)=excu_op ("ADD",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1434 "lex.tab.c"
+#line 1437 "lex.tab.c"
     break;
 
   case 55: /* E: E tSUB E  */
-#line 180 "lex.y"
+#line 183 "lex.y"
                       {(yyval.number)=excu_op ("SUB",(yyvsp[-2].number),(yyvsp[0].number));}
-#line 1440 "lex.tab.c"
+#line 1443 "lex.tab.c"
     break;
 
   case 56: /* E: tLPAR E tSUB E tRPAR  */
-#line 181 "lex.y"
+#line 184 "lex.y"
                                    {(yyval.number)=excu_op ("SUB",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1446 "lex.tab.c"
+#line 1449 "lex.tab.c"
     break;
 
   case 57: /* E: E tMUL E  */
-#line 182 "lex.y"
+#line 185 "lex.y"
                       {(yyval.number)=excu_op ("MUL",(yyvsp[-2].number),(yyvsp[0].number));}
-#line 1452 "lex.tab.c"
+#line 1455 "lex.tab.c"
     break;
 
   case 58: /* E: tLPAR E tMUL E tRPAR  */
-#line 183 "lex.y"
+#line 186 "lex.y"
                                    {(yyval.number)=excu_op ("MUL",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1458 "lex.tab.c"
+#line 1461 "lex.tab.c"
     break;
 
   case 59: /* E: E tDIV E  */
-#line 184 "lex.y"
+#line 187 "lex.y"
                       {(yyval.number)=excu_op ("DIV",(yyvsp[-2].number),(yyvsp[0].number));}
-#line 1464 "lex.tab.c"
+#line 1467 "lex.tab.c"
     break;
 
   case 60: /* E: tLPAR E tDIV E tRPAR  */
-#line 185 "lex.y"
+#line 188 "lex.y"
                                    {(yyval.number)=excu_op ("DIV",(yyvsp[-3].number),(yyvsp[-1].number));}
-#line 1470 "lex.tab.c"
+#line 1473 "lex.tab.c"
     break;
 
 
-#line 1474 "lex.tab.c"
+#line 1477 "lex.tab.c"
 
       default: break;
     }
@@ -1663,7 +1666,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 187 "lex.y"
+#line 190 "lex.y"
 
 int main(void){    
     //yydebug = 1;

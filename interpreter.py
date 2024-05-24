@@ -1,5 +1,5 @@
 
-fileInput = open("asm1", "r")
+fileInput = open("asm", "r")
 ASMLines = list(map(lambda e: e.rstrip("\n"), fileInput.readlines()))
 fileInput.close()
 
