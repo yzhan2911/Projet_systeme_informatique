@@ -32,5 +32,6 @@ int get_index_tab();
 int add_condition(char * condition,int r1,int r2);
 int excu_op (char* op,int r1, int r2);
 void exportASMTable();
-
+void ajout_index_jump(int a);
+void MAJ_JMP(int a);
 #endif

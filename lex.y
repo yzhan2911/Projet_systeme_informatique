@@ -29,7 +29,7 @@
 %token  tLBRACE tRBRACE tLPAR tRPAR
 %token  tVOID tERROR 
 %token  tSEMI tCOMMA
-%token  tMAIN tRETURN tCONST tPRINTF
+%token  tMAIN tRETURN tCONST tPRINTF //tFPRINTF tGUILLEMET
 %token<number> tIF tWHILE tELSE 
 %token  tCOMPEQ tCOMPL tCOMPG tCOMPLE tCOMPGE tCOMPNEQ
 
@@ -45,7 +45,7 @@
 Input:      Function|Function Input
             ;
 
-Function:       Type FunctionName  contenu { printf("main\n"); }
+Function:       Type FunctionName  contenuFunction { printf("main\n"); }
             ;
 FunctionName : tMAIN FunctionPara| tID FunctionPara;
 
@@ -60,6 +60,8 @@ Type:       tINT   {$$=(numberType)INT;}
             |tFLOAT {$$=(numberType)FLOAT;}
             |tCHAR {$$=(numberType)CHAR;}
             ;
+contenuFunction:tLBRACE tRBRACE
+                |tLBRACE excus tRBRACE { MAJ_JMP(get_index_tab());}
 
 contenu:    tLBRACE tRBRACE
             |tLBRACE { printf("Entrez la nouvelle contenue");}
@@ -71,10 +73,12 @@ excus:      excu excus
             ;
 
 excu :      Aff 
-            |Print
+          // |Print
+          // |Printerror
             |Declaration
             |IfStatement
             |WhileStatement
+            |Return
             ;
 Aff:        tID tAFFECT E tSEMI 
            {
@@ -85,10 +89,29 @@ Aff:        tID tAFFECT E tSEMI
                 suprime_valeur_temporaire();
         
               printf("Affectation %s \n",$1);
-            }
-            ;
-Print:      tPRINTF tLPAR E tRPAR tSEMI  ;
+            } ;
 
+/*
+Print:      tPRINTF tLPAR tGUILLEMET Contenuprint tGUILLEMET Variableprint tRPAR tSEMI {//suprime_valeur_temporaire();
+                                        //add_instruction("PRI",0,0,0);
+                                        }; 
+
+           // " " ou "a b c"   ou "a %d"                         
+Contenuprint:tID Contenuprint
+                |%empty 
+                ;
+
+            // ,variable 
+Variableprint: tCOMMA tID Variableprint
+                |%empty 
+               ;
+
+Printerror: 
+            tFPRINTF tLPAR E tCOMMA E tLPAR tSEMI{//suprime_valeur_temporaire();
+                                                    //suprime_valeur_temporaire();
+                                                    //add_instruction("PRI",0,0,0);
+                                                    };
+*/
 Declaration:Type  {ty=$1;} AffectationDuringDeclaration MultipleDeclaration tSEMI
             |tCONST Type {ty=$2;} AffectationDuringDeclaration MultipleDeclaration tSEMI
             ;
@@ -138,7 +161,6 @@ WhileStatement:tWHILE {$<number>1=get_index_tab();
                     }
                 Condition{ 
                     suprime_valeur_temporaire();
-                    suprime_valeur_temporaire();
                     $<number>2=get_index_tab();
                     add_instruction("JMF",$3,0,0);
                 }contenu{
@@ -147,12 +169,12 @@ WhileStatement:tWHILE {$<number>1=get_index_tab();
                 }
             ;
 
-Condition:  tLPAR E tCOMPEQ E tRPAR    {$$=add_condition("==",$2,$4);}
-            |tLPAR E tCOMPL E tRPAR    {$$=add_condition("<",$2,$4);}
-            |tLPAR E tCOMPG E tRPAR    {$$=add_condition(">",$2,$4);}
-            |tLPAR E tCOMPLE E tRPAR   {$$=add_condition("<=",$2,$4);}
-            |tLPAR E tCOMPGE E tRPAR   {$$=add_condition(">=",$2,$4);}
-            |tLPAR E tCOMPNEQ E tRPAR  {$$=add_condition("!=",$2,$4);}
+Condition:  tLPAR E tCOMPEQ E tRPAR    {$$=add_condition("==",$2,$4); suprime_valeur_temporaire();}
+            |tLPAR E tCOMPL E tRPAR    {$$=add_condition("<",$2,$4); suprime_valeur_temporaire();}
+            |tLPAR E tCOMPG E tRPAR    {$$=add_condition(">",$2,$4); suprime_valeur_temporaire();}
+            |tLPAR E tCOMPLE E tRPAR   {$$=add_condition("<=",$2,$4); suprime_valeur_temporaire();}
+            |tLPAR E tCOMPGE E tRPAR   {$$=add_condition(">=",$2,$4); suprime_valeur_temporaire();}
+            |tLPAR E tCOMPNEQ E tRPAR  {$$=add_condition("!=",$2,$4); suprime_valeur_temporaire();}
             |tLPAR E tRPAR {$$=$2;}
             ;
 
@@ -186,10 +208,19 @@ E:
             | tLPAR E tMUL E tRPAR {$$=excu_op ("MUL",$2,$4);}
             |E tDIV E {$$=excu_op ("DIV",$1,$3);}
             | tLPAR E tDIV E tRPAR {$$=excu_op ("DIV",$2,$4);};
-           
+
+Return: tRETURN E tSEMI{ajoutTable("return",INT,0);
+                        int index = getIndex("return");
+                        add_instruction("COP",index,$2,0);
+                        suprime_valeur_temporaire();
+                        
+                        int index_return =get_index_tab();
+                        ajout_index_jump(index_return);
+                        add_instruction("JMP",0,0,0);
+                        }
 %%
 int main(void){    
-    //yydebug = 1;
+   // yydebug = 1;
     ini_table();
     ini_table_instruction();
     yyparse();

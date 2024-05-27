@@ -38,5 +38,7 @@ int get_last_index();
 int creation_valeur_temporaire();
 void suprime_valeur_temporaire();
 void set_ini(char* name);
+void suprime_valeur_temporaire();
+void exportTableSymbole();
 /*numberType findtype(char *name);*/
 #endif

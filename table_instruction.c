@@ -4,6 +4,9 @@
 static instruction* instruT;
 static int index_instruction=0;
 static int index_excu=0;
+static int index_a_jump[10];
+static int current_size_jump=0;
+
 void ini_table_instruction(){
     instruT =malloc(sizeof(instruction)*MAX_TABLE_SIZE);
 }
@@ -92,4 +95,16 @@ void exportASMTable(){
         fprintf(fp,"%s %d %d %d\n", instruT[i].operation, instruT[i].r0, instruT[i].r1 , instruT[i].r2);
     }
     fclose(fp);
+}
+void ajout_index_jump(int a){
+    if(current_size_jump<10){
+        index_a_jump[current_size_jump]=a;
+        current_size_jump++;
+    }
+}
+void MAJ_JMP(int a){
+    for (int i=0;i<current_size_jump;i++){
+        int index=index_a_jump[i];
+        setInstruTR1(index,a,0);
+    }
 }

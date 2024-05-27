@@ -51,7 +51,7 @@ int getIndex(char* name){
 
 int creation_valeur_temporaire(){
     char nomtempo[50] ="valeurTempo";
-    sprintf(nomtempo,"%s%d",nomtempo,IndexTemporaire);
+    printf(nomtempo,"%s %d",nomtempo,IndexTemporaire);
     ajoutTable(nomtempo,0,0);
     IndexTemporaire++;
     return Index-1;

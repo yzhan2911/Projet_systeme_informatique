@@ -23,6 +23,7 @@ ALPHANUM    {ALPHABET}({ALPHABET}|{NUMBER}|"_")*?
 "}"         {return (tRBRACE);}
 "("         {return (tLPAR);}
 ")"         {return (tRPAR);}
+
 "int"       {return (tINT);}
 "const"     {return (tCONST);}
 "char"      {return (tCHAR);}
@@ -46,6 +47,7 @@ ALPHANUM    {ALPHABET}({ALPHABET}|{NUMBER}|"_")*?
 ">="        {return (tCOMPGE);}
 "!="        {return (tCOMPNEQ);}
 "printf"    {return (tPRINTF);}
+
 
 {NUMBER}    {yylval.number=atoi(yytext);
              return (tNUMBER);}
