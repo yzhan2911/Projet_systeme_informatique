@@ -1,51 +1,50 @@
 
-fileInput = open("asm", "r")
-ASMLines = list(map(lambda e: e.rstrip("\n"), fileInput.readlines()))
-fileInput.close()
+file = open("asm_pointer", "r")
+ASMLines = file.readlines()
+file.close()
 
 ASMLines.append("NOP")
 ASM = {}
 ip = 0
 while ip < len(ASMLines):
     incr = 1
-    currLine = ASMLines[ip].split()
+    Line = ASMLines[ip].split()
 
-    match currLine[0]:
+    match Line[0]:
         case "ADD":
-            ASM[currLine[1]] = ASM[currLine[2]] + ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] + ASM[Line[3]]
         case "MUL":
-            ASM[currLine[1]] = ASM[currLine[2]] * ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] * ASM[Line[3]]
         case "SUB":
-            ASM[currLine[1]] = ASM[currLine[2]] - ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] - ASM[Line[3]]
         case "DIV":
-            ASM[currLine[1]] = ASM[currLine[2]] / ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] / ASM[Line[3]]
         case "COP":
-            ASM[currLine[1]] = ASM[currLine[2]]
+            ASM[Line[1]] = ASM[Line[2]]
         case "AFC":
-            ASM[currLine[1]] = int(currLine[2])
+            ASM[Line[1]] = int(Line[2])
         case "SUP":
-            ASM[currLine[1]] = ASM[currLine[2]] > ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] > ASM[Line[3]]
         case "EQ":
-            ASM[currLine[1]] = ASM[currLine[2]] == ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] == ASM[Line[3]]
         case "NOT":
-            ASM[currLine[1]] = not ASM[currLine[2]]
+            ASM[Line[1]] = not ASM[Line[2]]
         case "INF":
-            ASM[currLine[1]] = ASM[currLine[2]] < ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] < ASM[Line[3]]
         case "AND":
-            ASM[currLine[1]] = ASM[currLine[2]] and ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] and ASM[Line[3]]
         case "OR":
-            ASM[currLine[1]] = ASM[currLine[2]] and ASM[currLine[3]]
+            ASM[Line[1]] = ASM[Line[2]] or ASM[Line[3]]
         case "JMP":
-            ip = int(currLine[1])
+            ip = int(Line[1])
             incr = 0
         case "JMF":
-            if not ASM[currLine[1]]:
+            if not ASM[Line[1]]:
+                ip = int(Line[2])
                 incr = 0
-                ip = int(currLine[2])
-        case "PRI":
-            pass
         case default:
             pass
+    print("--------------")
     print(ASMLines[ip])
     for i in ASM:
         print(f"{i}: {ASM[i]}")
