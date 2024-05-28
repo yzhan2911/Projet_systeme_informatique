@@ -64,7 +64,7 @@ contenuFunction:tLBRACE tRBRACE
                 |tLBRACE excus tRBRACE { MAJ_JMP(get_index_tab());}
 
 contenu:    tLBRACE tRBRACE
-            |tLBRACE { printf("Entrez la nouvelle contenue");}
+            |tLBRACE {  }
             excus tRBRACE 
             ;
 
@@ -84,12 +84,16 @@ excu :      Aff
 Aff:        tID tAFFECT E tSEMI 
            {
                 set_ini($1);
-                printf("element est: %s  ",$1);
+                int indextId=getIndex($1);
+                int valeurE=get_valeur($3);
+                set_valeur(indextId,valeurE);
+              
+                //printf("element est: %s  ",$1);
                 add_instruction("COP", getIndex($1),$3,0);
                    
                 suprime_valeur_temporaire();
         
-              printf("Affectation %s \n",$1);
+                //printf("Affectation %s \n",$1);
             } ;
 
 Declaration:Type  {ty=$1;} AffectationDuringDeclaration MultipleDeclaration tSEMI
@@ -100,13 +104,16 @@ MultipleDeclaration: tCOMMA AffectationDuringDeclaration MultipleDeclaration
                     | %empty 
                     ;
 
-AffectationDuringDeclaration: tID 
+AffectationDuringDeclaration: 
+                            tID 
                             tAFFECT {ajoutTable($1,ty,0);
                                     set_ini($1);} 
                             E {  
-                                int in= getIndex($1);
-                                printf("element est: %s  et index :%d\n",$1,in);
-                                add_instruction("COP",in,$4,0);
+                                int indextId= getIndex($1);
+                                int val=get_valeur($4);
+                                //printf("element est: %s  et index :%d\n",$1,indextId);
+                                add_instruction("COP",indextId,$4,0);
+                                set_valeur(indextId,val);
                                
                                 suprime_valeur_temporaire();
                                 }
@@ -124,7 +131,8 @@ IfStatement:tIF ifS1
             tRBRACE  {
                 setInstruTR1($<number>2, $<number>1,1); 
                  setInstruTR1( $<number>1-1,get_index_tab(),0);
-                 printf("index table est %d ",get_index_tab());} ;
+                 //printf("index table est %d ",get_index_tab());
+                 } ;
 
             |tIF ifS1
             tLBRACE 
@@ -165,32 +173,32 @@ Condition:  tLPAR E tCOMPEQ E tRPAR    {$$=add_condition("==",$2,$4); suprime_va
 E:          
             tID     {
                     int indexE=getIndex($1);
-                    int add=creation_valeur_temporaire();
+                    int add=creation_valeur_temporaire(get_valeur(indexE));
                     add_instruction("COP",add,indexE,0);
-                    printf("element est: %s ,index est  %d \n ",$1,indexE);
+                    //printf("element est: %s ,index est  %d \n ",$1,indexE);
                     $$=add;
                    } 
             |tREAL       {
-                        int add=creation_valeur_temporaire();
+                        int add=creation_valeur_temporaire($1);
                          add_instruction("AFC",add,$1,0);
                         $$=add;
                         }
                         
             |tNUMBER    {
-                       int add=creation_valeur_temporaire();
+                       int add=creation_valeur_temporaire($1);
                          add_instruction("AFC",add,$1,0);
                         $$=add;
                         }
-            |E tADD E  {$$=excu_op ("ADD",$1,$3);}
-            | tLPAR E tADD E tRPAR {$$=excu_op ("ADD",$2,$4);}
-            |E tSUB E {$$=excu_op ("SUB",$1,$3);}
-            | tLPAR E tSUB E tRPAR {$$=excu_op ("SUB",$2,$4);}
-            |E tMUL E {$$=excu_op ("MUL",$1,$3);}
-            | tLPAR E tMUL E tRPAR {$$=excu_op ("MUL",$2,$4);}
-            |E tDIV E {$$=excu_op ("DIV",$1,$3);}
-            | tLPAR E tDIV E tRPAR {$$=excu_op ("DIV",$2,$4);};
+            |E tADD E  {$$=excu_op ("ADD",$1,$3); set_valeur($1,get_valeur($1)+get_valeur($3)); }
+            | tLPAR E tADD E tRPAR {$$=excu_op ("ADD",$2,$4); set_valeur($2,get_valeur($2)+get_valeur($4)); }
+            |E tSUB E {$$=excu_op ("SUB",$1,$3); set_valeur($1,get_valeur($1)-get_valeur($3)); }
+            | tLPAR E tSUB E tRPAR {$$=excu_op ("SUB",$2,$4); set_valeur($2,get_valeur($2)-get_valeur($4)); }
+            |E tMUL E {$$=excu_op ("MUL",$1,$3); set_valeur($1,get_valeur($1)*get_valeur($3)); }
+            | tLPAR E tMUL E tRPAR {$$=excu_op ("MUL",$2,$4); set_valeur($2,get_valeur($2)*get_valeur($4));}
+            |E tDIV E {$$=excu_op ("DIV",$1,$3); set_valeur($1,get_valeur($1)/get_valeur($3)); }
+            | tLPAR E tDIV E tRPAR {$$=excu_op ("DIV",$2,$4); set_valeur($2,get_valeur($2)/get_valeur($4));};
 
-Return: tRETURN E tSEMI{ajoutTable("return",INT,0);
+Return: tRETURN E tSEMI{ajoutTable("return",INT,get_valeur($2));
                         int index = getIndex("return");
                         add_instruction("COP",index,$2,0);
                         suprime_valeur_temporaire();
@@ -204,17 +212,17 @@ Return: tRETURN E tSEMI{ajoutTable("return",INT,0);
 PointerStatement: Type tMUL tID tSEMI {ajoutTable($3,$1,0);
                                         int index=getIndex($3);
                                         add_instruction("AFC",index,0,0);
-                                        printf("ajouter ptr dans table synbole,et son index est:%d \n",index);
+                                        //printf("ajouter ptr dans table synbole,et son index est:%d \n",index);
                                         }
                 | tID tAFFECT tET tID tSEMI{ int indexPtr=getIndex($1);
                                              int index=getIndex($4);
-                                             printf("msj adresse de ptr,ptr=%d,varaible:%d \n",indexPtr,index);
+                                             //printf("msj adresse de ptr,ptr=%d,varaible:%d \n",indexPtr,index);
                                              set_valeur(indexPtr,index);
                                              add_instruction("AFC",indexPtr,index,0);
                                              }
                 | tMUL tID tAFFECT E tSEMI{ int indexptr=getIndex($2);
                                             add_instruction("COP",get_valeur(indexptr),$4,0);
-                                            printf("modifier la valeur de index %d vers valeur de index %d\n",get_valeur(indexptr),$4);
+                                            //printf("modifier la valeur de index %d vers valeur de index %d\n",get_valeur(indexptr),$4);
                                             suprime_valeur_temporaire();
                                             };
 

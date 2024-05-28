@@ -22,6 +22,7 @@ Symbole creerSymbole(char* name, numberType type,int valeur){
     return s;
 }
 void ajoutTable(char *name,numberType type,int valeur){
+    printf("%s , index: %d , valeur:%d \n",name,Index,valeur);
     Symbole element=creerSymbole(name,type,valeur);
     if (Index<IndexMax){
          symboleT[Index]=element;
@@ -49,10 +50,9 @@ int getIndex(char* name){
 }
 
 
-int creation_valeur_temporaire(){
-    char nomtempo[50] ="valeurTempo";
-    printf(nomtempo,"%s %d",nomtempo,IndexTemporaire);
-    ajoutTable(nomtempo,0,0);
+int creation_valeur_temporaire(int valeur){
+    char nomtempo[50] ="valeurTempo ";
+    ajoutTable(nomtempo,0,valeur);
     IndexTemporaire++;
     return Index-1;
 }
@@ -79,10 +79,11 @@ void exportTableSymbole(){
 }
 
 int get_valeur(int index){
-    printf("la valeur de index %d est %d \n",index, symboleT[index].valeur);
+    //printf("la valeur de index %d est %d \n",index, symboleT[index].valeur);
     return symboleT[index].valeur;
 }
 
 void set_valeur(int index,int val){
     symboleT[index].valeur=val;
+      printf("maj la valeur %d dans index %d\n",val,index);
 }

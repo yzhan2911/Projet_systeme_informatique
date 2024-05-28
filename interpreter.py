@@ -1,5 +1,5 @@
 
-file = open("asm_pointer", "r")
+file = open("asm", "r")
 ASMLines = file.readlines()
 file.close()
 

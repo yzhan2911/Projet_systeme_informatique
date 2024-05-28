@@ -41,8 +41,8 @@ int get_index_current(){
 
 int add_condition(char* op,int r1, int r2){
   
-    int add1=creation_valeur_temporaire();
-    int add2=creation_valeur_temporaire();
+    int add1=creation_valeur_temporaire(get_valeur(r1));
+    int add2=creation_valeur_temporaire(get_valeur(r2));
     add_instruction("COP",add1,r1,0);
     add_instruction("COP",add2,r2,0);
         if(strcmp(op,"==")==0) {      
@@ -56,21 +56,21 @@ int add_condition(char* op,int r1, int r2){
         }
         
         else if(strcmp(op,"!=")==0){
-            int val3=creation_valeur_temporaire();
+            int val3=creation_valeur_temporaire(0);
             add_instruction("INF",val3 ,add1,add2); 
             add_instruction("SUP",add1 ,add1,add2); 
             add_instruction("ADD",add1 ,add1,val3); 
             suprime_valeur_temporaire();
         }
         else if(strcmp(op,">=")==0){
-            int val3=creation_valeur_temporaire();
+            int val3=creation_valeur_temporaire(0);
             add_instruction("EQU",val3 ,add1,add2); 
             add_instruction("SUP",add1 ,add1,add2); 
             add_instruction("ADD",add1 ,add1,val3); 
             suprime_valeur_temporaire();
         }
         else if(strcmp(op,"<=")==0){
-           int val3=creation_valeur_temporaire();
+           int val3=creation_valeur_temporaire(0);
             add_instruction("INF",val3 ,add1,add2); 
             add_instruction("EQU",add1 ,add1,add2); 
             add_instruction("ADD",add1 ,add1,val3); 

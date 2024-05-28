@@ -35,7 +35,7 @@ int popValTemp();
 int pushValTemp();
 void handleError(const char *message);
 int get_last_index();
-int creation_valeur_temporaire();
+int creation_valeur_temporaire(int valeur);
 void suprime_valeur_temporaire();
 void set_ini(char* name);
 void suprime_valeur_temporaire();
