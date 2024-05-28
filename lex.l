@@ -34,6 +34,7 @@ ALPHANUM    {ALPHABET}({ALPHABET}|{NUMBER}|"_")*?
 "*"         {return (tMUL);}
 "/"         {return (tDIV);}
 "="         {return (tAFFECT);}
+"&"         {return (tET);}
 "if"        {return (tIF);}
 "else"      {return (tELSE);}
 "while"     {return (tWHILE);}

@@ -77,3 +77,12 @@ void exportTableSymbole(){
     fprintf(fp,"Indexest %d",Index);
     fclose(fp);
 }
+
+int get_valeur(int index){
+    printf("la valeur de index %d est %d \n",index, symboleT[index].valeur);
+    return symboleT[index].valeur;
+}
+
+void set_valeur(int index,int val){
+    symboleT[index].valeur=val;
+}

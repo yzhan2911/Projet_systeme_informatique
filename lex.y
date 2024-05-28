@@ -25,11 +25,11 @@
 %type <type> Type
 %type <number> E
 %type <number> Condition
-%token  tDIV tMUL tADD tSUB  tAFFECT
+%token  tDIV tMUL tADD tSUB  tAFFECT tET
 %token  tLBRACE tRBRACE tLPAR tRPAR
 %token  tVOID tERROR 
 %token  tSEMI tCOMMA
-%token  tMAIN tRETURN tCONST tPRINTF //tFPRINTF tGUILLEMET
+%token  tMAIN tRETURN tCONST tPRINTF  
 %token<number> tIF tWHILE tELSE 
 %token  tCOMPEQ tCOMPL tCOMPG tCOMPLE tCOMPGE tCOMPNEQ
 
@@ -79,6 +79,7 @@ excu :      Aff
             |IfStatement
             |WhileStatement
             |Return
+            |PointerStatement
             ;
 Aff:        tID tAFFECT E tSEMI 
            {
@@ -91,27 +92,6 @@ Aff:        tID tAFFECT E tSEMI
               printf("Affectation %s \n",$1);
             } ;
 
-/*
-Print:      tPRINTF tLPAR tGUILLEMET Contenuprint tGUILLEMET Variableprint tRPAR tSEMI {//suprime_valeur_temporaire();
-                                        //add_instruction("PRI",0,0,0);
-                                        }; 
-
-           // " " ou "a b c"   ou "a %d"                         
-Contenuprint:tID Contenuprint
-                |%empty 
-                ;
-
-            // ,variable 
-Variableprint: tCOMMA tID Variableprint
-                |%empty 
-               ;
-
-Printerror: 
-            tFPRINTF tLPAR E tCOMMA E tLPAR tSEMI{//suprime_valeur_temporaire();
-                                                    //suprime_valeur_temporaire();
-                                                    //add_instruction("PRI",0,0,0);
-                                                    };
-*/
 Declaration:Type  {ty=$1;} AffectationDuringDeclaration MultipleDeclaration tSEMI
             |tCONST Type {ty=$2;} AffectationDuringDeclaration MultipleDeclaration tSEMI
             ;
@@ -122,9 +102,10 @@ MultipleDeclaration: tCOMMA AffectationDuringDeclaration MultipleDeclaration
 
 AffectationDuringDeclaration: tID 
                             tAFFECT {ajoutTable($1,ty,0);
-                                set_ini($1);} E {  
+                                    set_ini($1);} 
+                            E {  
                                 int in= getIndex($1);
-                                printf("element est: %s  et index :%d",$1,in);
+                                printf("element est: %s  et index :%d\n",$1,in);
                                 add_instruction("COP",in,$4,0);
                                
                                 suprime_valeur_temporaire();
@@ -183,10 +164,10 @@ Condition:  tLPAR E tCOMPEQ E tRPAR    {$$=add_condition("==",$2,$4); suprime_va
 
 E:          
             tID     {
-                    printf("element est: %s  ",$1);
                     int indexE=getIndex($1);
                     int add=creation_valeur_temporaire();
                     add_instruction("COP",add,indexE,0);
+                    printf("element est: %s ,index est  %d \n ",$1,indexE);
                     $$=add;
                    } 
             |tREAL       {
@@ -218,6 +199,26 @@ Return: tRETURN E tSEMI{ajoutTable("return",INT,0);
                         ajout_index_jump(index_return);
                         add_instruction("JMP",0,0,0);
                         }
+
+        // int *ptr;   ptr=&a;   *ptr=40;
+PointerStatement: Type tMUL tID tSEMI {ajoutTable($3,$1,0);
+                                        int index=getIndex($3);
+                                        add_instruction("AFC",index,0,0);
+                                        printf("ajouter ptr dans table synbole,et son index est:%d \n",index);
+                                        }
+                | tID tAFFECT tET tID tSEMI{ int indexPtr=getIndex($1);
+                                             int index=getIndex($4);
+                                             printf("msj adresse de ptr,ptr=%d,varaible:%d \n",indexPtr,index);
+                                             set_valeur(indexPtr,index);
+                                             add_instruction("AFC",indexPtr,index,0);
+                                             }
+                | tMUL tID tAFFECT E tSEMI{ int indexptr=getIndex($2);
+                                            add_instruction("COP",get_valeur(indexptr),$4,0);
+                                            printf("modifier la valeur de index %d vers valeur de index %d\n",get_valeur(indexptr),$4);
+                                            suprime_valeur_temporaire();
+                                            };
+
+
 %%
 int main(void){    
    // yydebug = 1;

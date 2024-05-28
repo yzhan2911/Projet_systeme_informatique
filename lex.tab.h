@@ -65,27 +65,28 @@ extern int yydebug;
     tADD = 266,                    /* tADD  */
     tSUB = 267,                    /* tSUB  */
     tAFFECT = 268,                 /* tAFFECT  */
-    tLBRACE = 269,                 /* tLBRACE  */
-    tRBRACE = 270,                 /* tRBRACE  */
-    tLPAR = 271,                   /* tLPAR  */
-    tRPAR = 272,                   /* tRPAR  */
-    tVOID = 273,                   /* tVOID  */
-    tERROR = 274,                  /* tERROR  */
-    tSEMI = 275,                   /* tSEMI  */
-    tCOMMA = 276,                  /* tCOMMA  */
-    tMAIN = 277,                   /* tMAIN  */
-    tRETURN = 278,                 /* tRETURN  */
-    tCONST = 279,                  /* tCONST  */
-    tPRINTF = 280,                 /* tPRINTF  */
-    tIF = 281,                     /* tIF  */
-    tWHILE = 282,                  /* tWHILE  */
-    tELSE = 283,                   /* tELSE  */
-    tCOMPEQ = 284,                 /* tCOMPEQ  */
-    tCOMPL = 285,                  /* tCOMPL  */
-    tCOMPG = 286,                  /* tCOMPG  */
-    tCOMPLE = 287,                 /* tCOMPLE  */
-    tCOMPGE = 288,                 /* tCOMPGE  */
-    tCOMPNEQ = 289                 /* tCOMPNEQ  */
+    tET = 269,                     /* tET  */
+    tLBRACE = 270,                 /* tLBRACE  */
+    tRBRACE = 271,                 /* tRBRACE  */
+    tLPAR = 272,                   /* tLPAR  */
+    tRPAR = 273,                   /* tRPAR  */
+    tVOID = 274,                   /* tVOID  */
+    tERROR = 275,                  /* tERROR  */
+    tSEMI = 276,                   /* tSEMI  */
+    tCOMMA = 277,                  /* tCOMMA  */
+    tMAIN = 278,                   /* tMAIN  */
+    tRETURN = 279,                 /* tRETURN  */
+    tCONST = 280,                  /* tCONST  */
+    tPRINTF = 281,                 /* tPRINTF  */
+    tIF = 282,                     /* tIF  */
+    tWHILE = 283,                  /* tWHILE  */
+    tELSE = 284,                   /* tELSE  */
+    tCOMPEQ = 285,                 /* tCOMPEQ  */
+    tCOMPL = 286,                  /* tCOMPL  */
+    tCOMPG = 287,                  /* tCOMPG  */
+    tCOMPLE = 288,                 /* tCOMPLE  */
+    tCOMPGE = 289,                 /* tCOMPGE  */
+    tCOMPNEQ = 290                 /* tCOMPNEQ  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -101,7 +102,7 @@ union YYSTYPE
     int number;
     float reel;
 
-#line 105 "lex.tab.h"
+#line 106 "lex.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

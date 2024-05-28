@@ -14,4 +14,4 @@ clean:
 	rm lex lex.tab.c lex.yy.c lex.tab.h lex.output
 
 test: all
-	./lex < test_return.c
+	./lex < test.c

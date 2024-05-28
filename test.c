@@ -1,11 +1,14 @@
 int main()
-{ int a=5;
-  if (a<3){
-     printf("il est inferieur a 3");
-    return a-1;
-  }
-  else{
-     printf("il est superieur a 3");
-     return a+1;
-  }
+{
+  int a=1;
+  int b=2;
+  int * ptr;
+
+  ptr=&a;
+ *ptr=10;
+
+ ptr=&b;
+ *ptr=20;
+ 
+
 }

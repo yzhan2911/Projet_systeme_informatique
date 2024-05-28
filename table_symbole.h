@@ -40,5 +40,7 @@ void suprime_valeur_temporaire();
 void set_ini(char* name);
 void suprime_valeur_temporaire();
 void exportTableSymbole();
+int get_valeur(int index);
+void set_valeur(int index,int val);
 /*numberType findtype(char *name);*/
 #endif
