@@ -72,7 +72,7 @@ void exportTableSymbole(){
     FILE* fp;
     fp = fopen("symbole", "a");
     for (int i = 0; i < Index; ++i) {
-        fprintf(fp,"index: %d  type: %d sympole: %s ini: %d valeur: %d\n",i, symboleT[i].number,symboleT[i].name, symboleT[i].ini,symboleT[i].valeur);
+        fprintf(fp,"index: %d   sympole: %s  valeur: %d\n",i, symboleT[i].name, symboleT[i].valeur);
     }
     fprintf(fp,"Indexest %d",Index);
     fclose(fp);

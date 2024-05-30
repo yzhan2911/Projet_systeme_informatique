@@ -1,4 +1,4 @@
-index: 0  type: 0 sympole: a ini: 1 valeur: 22
-index: 1  type: 0 sympole: b ini: 1 valeur: 6
-index: 2  type: 0 sympole: c ini: 1 valeur: 8
+index: 0   sympole: a  valeur: 22
+index: 1   sympole: b  valeur: 6
+index: 2   sympole: c  valeur: 8
 Indexest 3
